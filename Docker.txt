@@ -1,0 +1,217 @@
+Usando Power Shell:
+ Docker run nome_da_imagem -> Cria uma nova imagem
+
+docker ps -a -> Mostra todos os containers
+
+docker run -it nome_da_imagem -> Faz rodar o cmd do sistema Op. junto com o da imagem(interação)
+
+docker start num_id_imagem -> Inicia um docker já criado
+
+docker stop num_do_id_imagem ->para o container da imagem
+
+docker start --help ->mostra opções de ajuda
+
+docker start -a -i num_id_imagem ->Acessa imagem, faz interação com cmd da imagem para entrar na imagem
+
+docker rm num_id_imagem -> remove uma imagem docker
+
+docker container prune -> remove todos os containers inativos
+
+docker images ->mostra nome das imagens dos containers
+
+docker rmi nome_da_imagem-> remove todas as imagens 
+
+docker run -d dockersamples/static-site -> baixa um container de um site statico. Essa imagem não oficial, devemos colocar o username/nome_da_imagem
+
+docker stop -t 0 id_imagem -> para o container em zero segundos. 
+
+docker run -d -P username/nome_imagem -> Atrela o num da porta do SO com as portas da imagem. 
+
+docker port id_imagem -> mostra o mapeamento das postas do SO com a imagem
+
+docker -machine ip -> mostra o ip da VM caso não seja for windows 
+
+docker run -d -P --name userrname/nome_do_container -> nomeia os containers
+
+docker rn -d -p  1234:80 usarname/nome_imagem -> ( 'p' minusculo) atrela a porta da imagem 80 para a porta do meu SO que eu escolher
+
+
+docker ps -q ->retorna os IDs ativos
+
+
+docker stop -t 0 $(docker ps -q) ->  Para todos os containers de uma vez só. 
+
+docker run -it -v "/var/www" ubuntu -> Cria um volume para guardar os dados
+
+cd var/www/ ->entra dentro da pasta
+
+touch novo-arquivo.txt ->criando arquivo dentro da pasta
+
+echo "Este arquivo dentro do volume" >nome_do_arquivo.txt -> escrevendo no arquivo. Verificar na pasta onde está salvado.
+
+Ao tentar criar o volume na minha maquina houve um erro 500 ao usar o seguinte comando:
+
+docker run -it -v "C:\Users\MeuUsuario\Desktop:/var/www" ubuntu
+
+Para solucionar basta seguir esses passos:
+
+Clique com o botão direito no Docker para Windows na área de notificações (Próximo ao relógio e a data);
+Clique em Settings (Configurações);
+No menu lateral esquerdo selecione Resources > File Sharing;
+Por fim, clique no mais "+" e adicione o "Disco Local (C:)" do Windows como diretório.
+Após isso será possível utilizar o comando acima, mas não esqueça de trocar o "MeuUsuario" pelo o usuário do seu Computador!!!
+
+
+
+Criando um container com imagem rodando uma aplicação:
+docker run -p 8080:3000 -v "C:\Users\Alura\Desktop\volume-exemplo:/var/www" -w "/var/www" node npm start
+
+cria um volume no respectivo caminho do container:
+docker run -v "[CAMINHO_VOLUME_LOCAL:]CAMINHO_VOLUME_CONTAINER" NOME_DA_IMAGEM - 
+
+
+retorna diversas informações sobre o container:
+docker inspect ID_CONTAINER - 
+
+
+
+Criando uma imagem docker a partir do dockerfile:
+
+docker build -f node.d
+ockerfile -t nome_da_imagem .
+
+Verificando a imagem:
+docker images
+
+forçando o delete e o stop do container: 
+docker rm -f id_do_container
+
+Criando um container com a nova imagem:
+docker run -d -p 8080:
+3000 cesars/node
+
+
+Enviando a imagem criada ao docker hub:
+1° faz login no docker hub
+no terminal digita: 
+docker login
+->digita user e senha
+2° Após o login digita:
+ docker push nome_da_imagem
+OBS: Nome da imagem deve ser igual ao repositorio. Caso não for deve executar os comandos:
+
+docker tag "nomeImagem":latest "usuarioDockerHub"/"nomeRepositorio":"nomeImagem" em seguida realizei o push da imagem:
+
+docker tag imagemJoao:latest jrmota92/repositorio:imagemJoao
+
+docker push jrmota92/repositorio:imagemJoao
+
+Criando o dockerfile:
+Deve instalar o mysql da última imagem disponível
+Os dados iniciais devem ser copiados para a pasta /etc/sinc
+O diretório de trabalho deve ser /etc/sinc/plen
+A porta de comunicação deve ser 1711
+O comando de entrada chmod 755 /etc/sinc
+
+Assim:
+FROM mysql:latest
+MAINTAINER Guilherme Nicolau
+COPY . /etc/sinc
+WORKDIR /etc/sinc/plen
+ENTRYPOINT chmod 755 /etc/sinc
+EXPOSE 1711
+
+
+Lista de comandos:
+docker build -f Dockerfile - cria uma imagem a partir de um Dockerfile.
+docker build -f CAMINHO_DOCKERFILE/Dockerfile -t NOME_USUARIO/NOME_IMAGEM - constrói e nomeia uma imagem não-oficial informando o caminho para o Dockerfile.
+docker login - inicia o processo de login no Docker Hub.
+docker push NOME_USUARIO/NOME_IMAGEM - envia a imagem criada para o Docker Hub.
+docker pull NOME_USUARIO/NOME_IMAGEM - baixa a imagem desejada do Docker Hub.
+
+
+verificando IP do cantainer:
+docker run -it ubuntu
+hostname -i
+
+Para dar ping nos containers:
+1° instale os comandos
+->apt-get update && apt-get install -
+y iputils-ping
+
+2°cria uma rede:
+docker network create --driver bridge minha-rede
+verificando as redes:
+docker network ls
+
+3° cria um container dentro da rede criada:
+docker run -it --name meu-conatine
+r-de-ubuntu --network minha-rede ubuntu
+
+Baixando uma imagem do docker hub COM tag:
+docker pull douglasq/alura-books:cap05
+docker pull mongo
+
+docker pull NOME_USUARIO/NOME_IMAGEM
+
+
+Comandos:
+
+hostname -i - mostra o ip atribuído ao container pelo docker (funciona apenas dentro do container).
+docker network create --driver bridge NOME_DA_REDE - cria uma rede especificando o driver desejado.
+docker run -it --name NOME_CONTAINER --network NOME_DA_REDE NOME_IMAGEM - cria um container especificando seu nome e qual rede deverá ser usada.
+
+
+Com o docker-compose.yml pronto:
+$ cd Desktop/alura-docker-cap06/
+~/Desktop/alura-docker-cap06$ sudo docker-compose build
+
+docker-compose up -d
+
+docker exec -it alura-books-1 ping alura-books-2
+
+Para parar e iniciar o compose:
+docker-compose down
+docker-compose up
+
+
+
+Segue a lista com os principais comandos utilizados durante o curso:
+
+Comandos relacionados às informações
+docker version - exibe a versão do docker que está instalada.
+docker inspect ID_CONTAINER - retorna diversas informações sobre o container.
+docker ps - exibe todos os containers em execução no momento.
+docker ps -a - exibe todos os containers, independentemente de estarem em execução ou não.
+Comandos relacionados à execução
+docker run NOME_DA_IMAGEM - cria um container com a respectiva imagem passada como parâmetro.
+docker run -it NOME_DA_IMAGEM - conecta o terminal que estamos utilizando com o do container.
+docker run -d -P --name NOME dockersamples/static-site - ao executar, dá um nome ao container e define uma porta aleatória.
+docker run -d -p 12345:80 dockersamples/static-site - define uma porta específica para ser atribuída à porta 80 do container, neste caso 12345.
+docker run -v "CAMINHO_VOLUME" NOME_DA_IMAGEM - cria um volume no respectivo caminho do container.
+docker run -it --name NOME_CONTAINER --network NOME_DA_REDE NOME_IMAGEM - cria um container especificando seu nome e qual rede deverá ser usada.
+Comandos relacionados à inicialização/interrupção
+docker start ID_CONTAINER - inicia o container com id em questão.
+docker start -a -i ID_CONTAINER - inicia o container com id em questão e integra os terminais, além de permitir interação entre ambos.
+docker stop ID_CONTAINER - interrompe o container com id em questão.
+Comandos relacionados à remoção
+docker rm ID_CONTAINER - remove o container com id em questão.
+docker container prune - remove todos os containers que estão parados.
+docker rmi NOME_DA_IMAGEM - remove a imagem passada como parâmetro.
+Comandos relacionados à construção de Dockerfile
+docker build -f Dockerfile - cria uma imagem a partir de um Dockerfile.
+docker build -f Dockerfile -t NOME_USUARIO/NOME_IMAGEM - constrói e nomeia uma imagem não-oficial.
+docker build -f Dockerfile -t NOME_USUARIO/NOME_IMAGEM CAMINHO_DOCKERFILE - constrói e nomeia uma imagem não-oficial informando o caminho para o Dockerfile.
+Comandos relacionados ao Docker Hub
+docker login - inicia o processo de login no Docker Hub.
+docker push NOME_USUARIO/NOME_IMAGEM - envia a imagem criada para o Docker Hub.
+docker pull NOME_USUARIO/NOME_IMAGEM - baixa a imagem desejada do Docker Hub.
+Comandos relacionados à rede
+
+hostname -i - mostra o ip atribuído ao container pelo docker (funciona apenas dentro do container).
+docker network create --driver bridge NOME_DA_REDE - cria uma rede especificando o driver desejado.
+Comandos relacionados ao docker-compose
+
+docker-compose build - Realiza o build dos serviços relacionados ao arquivo docker-compose.yml, assim como verifica a sua sintaxe.
+docker-compose up - Sobe todos os containers relacionados ao docker-compose, desde que o build já tenha sido executado.
+docker-compose down - Para todos os serviços em execução que estejam relacionados ao arquivo docker-compose.yml.
